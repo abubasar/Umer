@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Com.Umer.ApplicationService\Com.Umer.ApplicationService.csproj" />
+    <ProjectReference Include="..\Com.Umer.DataModel\Com.Umer.DataModel.csproj" />
+    <ProjectReference Include="..\Com.Umer.Repository\Com.Umer.Repository.csproj" />
+    <ProjectReference Include="..\Com.Umer.RequestModel\Com.Umer.RequestModel.csproj" />
+    <ProjectReference Include="..\Com.Umer.ViewModel\Com.Umer.ViewModel.csproj" />
+  </ItemGroup>
+
+</Project>

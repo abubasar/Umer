@@ -1,0 +1,95 @@
+﻿using Com.Umer.ApplicationService;
+using Com.Umer.DataModel;
+using Com.Umer.RequestModel;
+using Com.Umer.ViewModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.HttpSys;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Com.Umer.Web.Api.Controllers
+{
+    [ApiController]
+    public class BaseController<T, Tr, Tv> : ControllerBase where T : BaseEntity where Tr : BaseRequestModel<T> where Tv : BaseViewModel<T>
+    {
+        private readonly IBaseService<T, Tr, Tv> service;
+        public BaseController(IBaseService<T, Tr, Tv> service)
+        {
+            this.service = service;
+        }
+        [HttpPost]
+        [Route("search")]
+        public IActionResult Search(Tr request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("please vi sob field fill up koren");
+            }
+            var searchResult = service.Search(request);
+            return Ok(searchResult);
+        }
+
+
+        [Route("reference-no")]
+        [HttpGet]
+        public IActionResult GetReferenceNo()
+        {
+
+            string referenceNo = service.GetReferanceId();
+            return Ok(new { ReferenceNo = referenceNo });
+        }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
+        [Route("add")]
+        public IActionResult POST(T model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Bhai please sob field fill up koren");
+            }
+
+            model.Id = Guid.NewGuid().ToString();
+
+            model.Created = DateTime.Now;
+
+            var add = service.Add(model);
+            return Ok(add);
+        }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut]
+        [Route("edit")]
+        public IActionResult PUT(T model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Bhai please sob field fill up koren");
+            }
+
+            var edit = service.Edit(model);
+            return Ok(edit);
+        }
+
+        [Route("get/{id}")]
+        [HttpGet]
+        public IActionResult GET(string id)
+        {
+            var model = service.GetById(id);
+            return Ok(model);
+        }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("delete/{id}")]
+        [HttpDelete]
+        public IActionResult DELETE(string id)
+        {
+            var deleted = service.Delete(id);
+            return Ok(deleted);
+        }
+    }
+}
